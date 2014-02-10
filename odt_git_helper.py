@@ -43,7 +43,7 @@ def extractODT(path, zipName, args):
                 pretty_xml_as_string = xmlFile.toprettyxml()
 
                 out_file = open(fileWPath,"w")
-                out_file.write(pretty_xml_as_string)
+                out_file.write(pretty_xml_as_string.encode('utf-8'))
                 out_file.close()
 
 

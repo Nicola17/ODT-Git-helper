@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import os
 import zipfile
 import argparse
@@ -11,12 +13,12 @@ def createODT(path, zipName, args):
                 continue
             zipf.write(os.path.join(root, file), os.path.join(root, file)[path.__len__():])
             if args.verbose:
-                print os.path.join(root, file)[path.__len__():]
+                print(os.path.join(root, file)[path.__len__():])
 
         for dir in dirs:
             zipf.write(os.path.join(root, dir), os.path.join(root, dir)[path.__len__():])
             if args.verbose:
-                print os.path.join(root, dir)[path.__len__():]
+                print(os.path.join(root, dir)[path.__len__():])
 
     zipf.close()
 
@@ -27,13 +29,13 @@ def extractODT(path, zipName, args):
     zipf.close()
 
     if args.verbose:
-        print "Pretty xml generation"
+        print("Pretty xml generation")
     for root, dirs, files in os.walk(path):
         for file in files:
             fileWPath = os.path.join(root, file)
             if fileWPath[-3:] == "xml":
                 if args.verbose:
-                    print fileWPath
+                    print(fileWPath)
 
                 statinfo = os.stat(fileWPath)
                 if statinfo.st_size == 0:
@@ -42,7 +44,7 @@ def extractODT(path, zipName, args):
                 xmlFile = xml.dom.minidom.parse(fileWPath)
                 pretty_xml_as_string = xmlFile.toprettyxml()
 
-                out_file = open(fileWPath,"w")
+                out_file = open(fileWPath,"wb")
                 out_file.write(pretty_xml_as_string.encode('utf-8'))
                 out_file.close()
 
@@ -62,11 +64,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.extract or (not args.extract and not args.compress):
-        print 'Extract files'
+        print('Extract files')
         extractODT(args.directory, args.odt_file, args)
 
     if args.compress:
-        print 'Compress files'
+        print('Compress files')
         createODT(args.directory, args.odt_file, args)
-
-

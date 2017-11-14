@@ -68,9 +68,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.prettyprint and args.compress:
-        print 'Note: prettyprinting is only used when extracting the .odt file'
+        print('Note: prettyprinting is only used when extracting the .odt file')
     if args.zlib and args.extract:
-        print 'Note: zlib compression is only used when compressing the files'
+        print('Note: zlib compression is only used when compressing the files')
 
     if args.extract or (not args.extract and not args.compress):
         print('Extract files')

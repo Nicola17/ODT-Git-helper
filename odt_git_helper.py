@@ -63,6 +63,9 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    if args.prettyprint and args.compress:
+        print 'Note: prettyprinting is only used when extracting the .odt file'
+
     if args.extract or (not args.extract and not args.compress):
         print 'Extract files'
         extractODT(args.directory, args.odt_file, args)

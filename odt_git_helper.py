@@ -29,31 +29,33 @@ def extractODT(path, zipName, args):
         zipf.extract(name, path)
     zipf.close()
 
-    if args.verbose:
-        print("Pretty xml generation")
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            fileWPath = os.path.join(root, file)
-            if fileWPath[-3:] == "xml":
-                if args.verbose:
-                    print(fileWPath)
+    if args.prettyprint:
+        if args.verbose:
+            print("Pretty xml generation")
+        for root, dirs, files in os.walk(path):
+            for file in files:
+                fileWPath = os.path.join(root, file)
+                if fileWPath[-3:] == "xml":
+                    if args.verbose:
+                        print(fileWPath)
 
-                statinfo = os.stat(fileWPath)
-                if statinfo.st_size == 0:
-                    continue
+                    statinfo = os.stat(fileWPath)
+                    if statinfo.st_size == 0:
+                        continue
 
-                xmlFile = xml.dom.minidom.parse(fileWPath)
-                pretty_xml_as_string = xmlFile.toprettyxml()
+                    xmlFile = xml.dom.minidom.parse(fileWPath)
+                    pretty_xml_as_string = xmlFile.toprettyxml()
 
-                out_file = open(fileWPath,"wb")
-                out_file.write(pretty_xml_as_string.encode('utf-8'))
-                out_file.close()
+                    out_file = open(fileWPath,"wb")
+                    out_file.write(pretty_xml_as_string.encode('utf-8'))
+                    out_file.close()
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Extract/Create an odt file in/from a directory.')
 
     parser.add_argument("-v","--verbose", action='store_true', default=False, help="increase output verbosity")
+    parser.add_argument("-p","--prettyprint", action='store_true', default=False, help="prettyprint xml files")
     parser.add_argument("-z","--zlib", action='store_true', default=False, help="use deflated compression")
 
     group = parser.add_mutually_exclusive_group()
@@ -65,6 +67,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    if args.prettyprint and args.compress:
+        print 'Note: prettyprinting is only used when extracting the .odt file'
     if args.zlib and args.extract:
         print 'Note: zlib compression is only used when compressing the files'
 

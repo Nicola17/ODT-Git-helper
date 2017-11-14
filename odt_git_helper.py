@@ -6,7 +6,8 @@ import argparse
 import xml.dom.minidom
 
 def createODT(path, zipName, args):
-    zipf = zipfile.ZipFile(zipName, 'w')
+    compression_mode = zipfile.ZIP_DEFLATED if args.zlib else zipfile.ZIP_STORED
+    zipf = zipfile.ZipFile(zipName, 'w', compression_mode)
     for root, dirs, files in os.walk(path):
         for file in files:
             if 'Thumbs.db' in file:
@@ -53,6 +54,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Extract/Create an odt file in/from a directory.')
 
     parser.add_argument("-v","--verbose", action='store_true', default=False, help="increase output verbosity")
+    parser.add_argument("-z","--zlib", action='store_true', default=False, help="use deflated compression")
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-c", "--compress", action="store_true", default=False, help='compress into an .odt file')
@@ -62,6 +64,9 @@ if __name__ == '__main__':
     parser.add_argument('odt_file', metavar='ODT_File', type=str, help='target/destination odt file')
 
     args = parser.parse_args()
+
+    if args.zlib and args.extract:
+        print 'Note: zlib compression is only used when compressing the files'
 
     if args.extract or (not args.extract and not args.compress):
         print('Extract files')
